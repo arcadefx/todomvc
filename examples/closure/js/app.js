@@ -29,24 +29,23 @@ goog.require('todomvc.view.ToDoListContainer');
  * @type {todomvc.model.ToDoItemStore}
  */
 var itemStore = new todomvc.model.ToDoItemStore();
-itemStore.addEventListener(todomvc.model.ToDoItemStore.ChangeEventType,
-    redraw);
+itemStore.listen(todomvc.model.ToDoItemStore.ChangeEventType, redraw);
 
 /**
  * @type {todomvc.view.ToDoListContainer}
  */
 var container = new todomvc.view.ToDoListContainer();
-container.decorate(document.getElementById('todo-list'));
+container.decorate(document.querySelector('.todo-list'));
 
 /**
  * @type {Element}
  */
-var main = document.getElementById('main');
+var main = document.querySelector('.main');
 
 /**
  * @type {Element}
  */
-var footer = document.getElementById('footer');
+var footer = document.querySelector('.footer');
 
 /**
  * @type {goog.ui.Control}
@@ -75,7 +74,7 @@ goog.events.listen(clearCompletedControl,
 /**
  * @type {Element}
  */
-var toggleAll = document.getElementById('toggle-all');
+var toggleAll = document.querySelector('.toggle-all');
 goog.events.listen(toggleAll, goog.events.EventType.CLICK, function(e) {
     /**
      * @type {boolean}
@@ -110,8 +109,8 @@ var currentRoute = todomvc.Route.ALL;
 /**
  * @type {!goog.History}
  */
-var history = new goog.History();
-goog.events.listen(history, goog.history.EventType.NAVIGATE,
+var historyObj = new goog.History();
+goog.events.listen(historyObj, goog.history.EventType.NAVIGATE,
         function(e) {
     // constrain the route to be one of the enum values
     switch (e.token) {
@@ -124,7 +123,7 @@ goog.events.listen(history, goog.history.EventType.NAVIGATE,
         }
         break;
     default:
-        history.replaceToken(todomvc.Route.ALL);
+        historyObj.replaceToken(todomvc.Route.ALL);
         break;
     }
 });
@@ -161,16 +160,14 @@ function redraw() {
     var remainingCount = items.length - (doneCount);
     toggleAll.checked = remainingCount === 0;
     itemCountControl.setContent(remainingCount.toString());
-    clearCompletedControl.setContent(doneCount.toString());
     clearCompletedControl.setVisible(doneCount > 0);
-    goog.style.showElement(main, items.length > 0);
-    goog.style.showElement(footer, items.length > 0);
+    goog.style.setElementShown(main, items.length > 0);
+    goog.style.setElementShown(footer, items.length > 0);
 
     /**
-     * @type {Array.<Element>}
+     * @type {NodeList}
      */
-    var routeLinks = /** @type {Array.<Element>} */
-        (goog.dom.query('#filters a'));
+    var routeLinks = document.querySelectorAll('.filters a');
     goog.array.forEach(routeLinks, function(link, i) {
         if ((currentRoute === todomvc.Route.ALL && i === 0) ||
                 (currentRoute === todomvc.Route.ACTIVE && i === 1) ||
@@ -199,8 +196,8 @@ goog.events.listen(container,
      * @type {!todomvc.model.ToDoItem}
      */
     var updatedModel = new todomvc.model.ToDoItem(
-            (/**@type {!string} */ control.getContent()),
-            (/**@type {!boolean} */ control.isChecked()),
+            /**@type {!string} */ (control.getContent()),
+            /**@type {!boolean} */ (control.isChecked()),
             originalModel.getId());
 
     itemStore.addOrUpdate(updatedModel);
@@ -216,7 +213,7 @@ goog.events.listen(container,
     /**
      * @type {todomvc.model.ToDoItem}
      */
-    var model = (/**@type {todomvc.model.ToDoItem} */ control.getModel());
+    var model = /**@type {todomvc.model.ToDoItem} */ (control.getModel());
     if (model !== null) {
         itemStore.remove(model);
     }
@@ -225,7 +222,7 @@ goog.events.listen(container,
 /**
  * @type {Element}
  */
-var newToDo = document.getElementById('new-todo');
+var newToDo = document.querySelector('.new-todo');
 goog.events.listen(newToDo, goog.events.EventType.KEYUP, function(e) {
     if (e.keyCode !== goog.events.KeyCodes.ENTER) {
         return;
@@ -242,4 +239,4 @@ goog.events.listen(newToDo, goog.events.EventType.KEYUP, function(e) {
 });
 
 itemStore.load();
-history.setEnabled(true);
+historyObj.setEnabled(true);

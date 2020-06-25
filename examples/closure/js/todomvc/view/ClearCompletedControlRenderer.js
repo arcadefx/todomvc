@@ -25,10 +25,11 @@ goog.addSingletonGetter(todomvc.view.ClearCompletedControlRenderer);
  */
 todomvc.view.ClearCompletedControlRenderer.prototype.createDom =
     function(control) {
-    var html = todomvc.view.clearCompleted({
+    var sanitizedHtml = todomvc.view.clearCompleted({
         number: control.getContent()
     });
-    var element = (/**@type {!Element}*/ goog.dom.htmlToDocumentFragment(html));
+    var element = /**@type {!Element}*/ (goog.dom.htmlToDocumentFragment(
+        sanitizedHtml.toString()));
     this.setAriaStates(control, element);
     return element;
 };
@@ -40,17 +41,6 @@ todomvc.view.ClearCompletedControlRenderer.prototype.createDom =
 todomvc.view.ClearCompletedControlRenderer.prototype.canDecorate =
     function(element) {
     return false;
-};
-
-/**
- * @param {Element} element Element to populate.
- * @param {goog.ui.ControlContent} content Text caption or DOM.
- */
-todomvc.view.ClearCompletedControlRenderer.prototype.setContent =
-    function(element, content) {
-    element.innerHTML = todomvc.view.clearCompletedInner({
-        number: content
-    });
 };
 
 /**

@@ -1,25 +1,53 @@
-/*global TodoMVC */
-'use strict';
+/*global TodoMVC:true, Backbone */
 
-TodoMVC.module('Layout', function (Layout, App, Backbone) {
+var TodoMVC = TodoMVC || {};
+
+(function () {
+	'use strict';
+
+	var filterChannel = Backbone.Radio.channel('filter');
+
+	TodoMVC.RootLayout = Mn.View.extend({
+
+		el: '.todoapp',
+
+		regions: {
+			header: '.header',
+			main: '.main',
+			footer: '.footer'
+		}
+	});
+
 	// Layout Header View
 	// ------------------
-	Layout.Header = Backbone.Marionette.ItemView.extend({
+	TodoMVC.HeaderLayout = Mn.View.extend({
+
 		template: '#template-header',
 
 		// UI bindings create cached attributes that
 		// point to jQuery selected objects
 		ui: {
-			input: '#new-todo'
+			input: '.new-todo'
 		},
 
 		events: {
-			'keypress @ui.input': 'onInputKeypress'
+			'keypress @ui.input': 'onInputKeypress',
+			'keyup @ui.input': 'onInputKeyup'
+		},
+
+		// According to the spec
+		// If escape is pressed during the edit, the edit state should be left and any changes be discarded.
+		onInputKeyup: function (e) {
+			var ESC_KEY = 27;
+
+			if (e.which === ESC_KEY) {
+				this.render();
+			}
 		},
 
 		onInputKeypress: function (e) {
-			var ENTER_KEY = 13,
-			todoText = this.ui.input.val().trim();
+			var ENTER_KEY = 13;
+			var todoText = this.ui.input.val().trim();
 
 			if (e.which === ENTER_KEY && todoText) {
 				this.collection.create({
@@ -32,18 +60,18 @@ TodoMVC.module('Layout', function (Layout, App, Backbone) {
 
 	// Layout Footer View
 	// ------------------
-	Layout.Footer = Backbone.Marionette.ItemView.extend({
+	TodoMVC.FooterLayout = Mn.View.extend({
 		template: '#template-footer',
 
 		// UI bindings create cached attributes that
 		// point to jQuery selected objects
 		ui: {
-			filters: '#filters a',
+			filters: '.filters a',
 			completed: '.completed a',
 			active: '.active a',
 			all: '.all a',
-			summary: '#todo-count',
-			clear: '#clear-completed'
+			summary: '.todo-count',
+			clear: '.clear-completed'
 		},
 
 		events: {
@@ -51,17 +79,17 @@ TodoMVC.module('Layout', function (Layout, App, Backbone) {
 		},
 
 		collectionEvents: {
-			'all': 'render'
+			all: 'render'
 		},
 
-		templateHelpers: {
+		templateContext: {
 			activeCountLabel: function () {
 				return (this.activeCount === 1 ? 'item' : 'items') + ' left';
 			}
 		},
 
 		initialize: function () {
-			this.listenTo(App.request('filterState'), 'change:filter', this.updateFilterSelection, this);
+			this.listenTo(filterChannel.request('filterState'), 'change:filter', this.updateFilterSelection, this);
 		},
 
 		serializeData: function () {
@@ -82,7 +110,7 @@ TodoMVC.module('Layout', function (Layout, App, Backbone) {
 
 		updateFilterSelection: function () {
 			this.ui.filters.removeClass('selected');
-			this.ui[App.request('filterState').get('filter')]
+			this.ui[filterChannel.request('filterState').get('filter')]
 			.addClass('selected');
 		},
 
@@ -93,4 +121,4 @@ TodoMVC.module('Layout', function (Layout, App, Backbone) {
 			});
 		}
 	});
-});
+})();

@@ -8,6 +8,12 @@ var app = app || {};
 		el.style.display = toggle ? '' : 'none';
 	};
 
+	var matchesSelector = function (node, selector) {
+		return [].some.call(document.querySelectorAll(selector), function (el) {
+			return el === node;
+		});
+	};
+
 	// The Application
 	// ---------------
 
@@ -16,26 +22,26 @@ var app = app || {};
 
 		// Instead of generating a new element, bind to the existing skeleton of
 		// the App already present in the HTML.
-		el: '#todoapp',
+		el: '.todoapp',
 
 		// Our template for the line of statistics at the bottom of the app.
 		statsTemplate: microtemplate(document.querySelector('#stats-template').innerHTML),
 
 		// Delegated events for creating new items, and clearing completed ones.
 		events: {
-			'keypress #new-todo': 'createOnEnter',
-			'click #clear-completed': 'clearCompleted',
-			'click #toggle-all': 'toggleAllComplete'
+			'keypress .new-todo': 'createOnEnter',
+			'click .clear-completed': 'clearCompleted',
+			'click .toggle-all': 'toggleAllComplete'
 		},
 
 		// At initialization we bind to the relevant events on the `Todos`
 		// collection, when items are added or changed. Kick things off by
 		// loading any preexisting todos that might be saved in *localStorage*.
 		initialize: function () {
-			this.allCheckbox = this.find('#toggle-all');
-			this.input = this.find('#new-todo');
-			this.footer = this.find('#footer');
-			this.main = this.find('#main');
+			this.allCheckbox = this.$('.toggle-all').item(0);
+			this.input = this.$('.new-todo').item(0);
+			this.footer = this.$('.footer').item(0);
+			this.main = this.$('.main').item(0);
 
 			this.listenTo(app.todos, 'add', this.addOne);
 			this.listenTo(app.todos, 'reset', this.addAll);
@@ -66,9 +72,9 @@ var app = app || {};
 					remaining: remaining
 				});
 
-				this.findAll('#filters li a').forEach(function (el) {
+				[].forEach.call(this.$('.filters li a'), function (el) {
 					el.classList.remove('selected');
-					if (Backbone.utils.matchesSelector(el, selector)) {
+					if (matchesSelector(el, selector)) {
 						el.classList.add('selected');
 					}
 				});
@@ -85,12 +91,12 @@ var app = app || {};
 		// appending its element to the `<ul>`.
 		addOne: function (todo) {
 			var view = new app.TodoView({ model: todo });
-			document.querySelector('#todo-list').appendChild(view.render().el);
+			document.querySelector('.todo-list').appendChild(view.render().el);
 		},
 
 		// Add all items in the **Todos** collection at once.
 		addAll: function () {
-			this.find('#todo-list').innerHTML = '';
+			this.$('.todo-list').item(0).innerHTML = '';
 			app.todos.forEach(this.addOne, this);
 		},
 

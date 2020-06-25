@@ -10,11 +10,11 @@ We think it's best for the project if the code you write looks like the code the
 - Semicolon
 - Strict mode
 - No trailing whitespace
-- Variables at the top of the scope
+- Variable declaration at the top of the scope when used by both outer and inner scope
 - Multiple variable statements
 - Space after keywords and between arguments and operators
 - Return early
-- JSHint valid
+- JSHint and JSCS valid
 - Consistency
 
 Example:
@@ -23,14 +23,14 @@ Example:
 'use strict';
 
 function foo(bar, fum) {
-	var i, l, ret;
+	var ret;
 	var hello = 'Hello';
 
 	if (!bar) {
 		return;
 	}
 
-	for (i = 0, l = bar.length; i < l; i++) {
+	for (var i = 0; i < bar.length; i++) {
 		if (bar[i] === hello) {
 			ret += fum(bar[i]);
 		}
@@ -45,7 +45,7 @@ Read [idiomatic.js](https://github.com/rwldrn/idiomatic.js) for general JavaScri
 
 ## Anonymous Functions
 
-When using anonymous functions, leave a space between the function name and opening parenthesis.
+When using anonymous functions, leave a space between the function name and the opening parenthesis.
 
 Example:
 
@@ -113,7 +113,7 @@ define('Block', [
 
 When you submit your pull request, one of the first things we will do is run JSHint against your code.
 
-You can help speed the process by running it yourself:
+You can help speed up the process by running it yourself:
 
 ```
 jshint path/to/your/app/js

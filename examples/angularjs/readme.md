@@ -13,7 +13,7 @@ Here are some links you may find helpful:
 * [Tutorial](http://docs.angularjs.org/tutorial)
 * [API Reference](http://docs.angularjs.org/api)
 * [Developer Guide](http://docs.angularjs.org/guide)
-* [Applications built with AngularJS](http://builtwith.angularjs.org)
+* [Applications built with AngularJS](https://www.madewithangular.com/)
 * [Blog](http://blog.angularjs.org)
 * [FAQ](http://docs.angularjs.org/misc/faq)
 * [AngularJS Meetups](http://www.youtube.com/angularjs)
@@ -34,3 +34,12 @@ Get help from other AngularJS users:
 * [AngularjS on Google +](https://plus.google.com/+AngularJS/posts)
 
 _If you have other helpful links to share, or find any of the links above no longer work, please [let us know](https://github.com/tastejs/todomvc/issues)._
+
+## Testsuite
+
+The app uses [Karma](http://karma-runner.github.io/0.12/index.html) to run the tests located in the `test/` folder. To run the tests:
+
+```
+$ npm install
+$ npm test
+```

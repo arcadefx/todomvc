@@ -13,20 +13,20 @@ Here are some links you may find helpful:
 
 * [Tutorial](http://www.typescriptlang.org/Tutorial)
 * [Code Playground](http://www.typescriptlang.org/Playground)
-* [Documentation](http://typescript.codeplex.com/documentation)
+* [Documentation](https://github.com/Microsoft/TypeScript/wiki)
 * [Applications built with TypeScript](http://www.typescriptlang.org/Samples)
 * [Blog](http://blogs.msdn.com/b/typescript)
-* [Source Code](http://typescript.codeplex.com/sourcecontrol/latest#README.txt)
+* [Source Code](https://github.com/Microsoft/TypeScript)
 
 Articles and guides from the community:
 
 * [Thoughts on TypeScript](http://www.nczonline.net/blog/2012/10/04/thoughts-on-typescript)
-* [ScreenCast - Why I Like TypeScript](http://www.leebrimelow.com/why-i-like-typescripts)
+* [ScreenCast - Why I Like TypeScript](https://www.youtube.com/watch?v=Mh5VQVfWTbs)
 
 Get help from other TypeScript users:
 
 * [TypeScript on StackOverflow](http://stackoverflow.com/questions/tagged/typescript)
-* [Forums](http://typescript.codeplex.com/discussions)
+* [Forums](https://github.com/Microsoft/TypeScript/issues)
 * [TypeScript on Twitter](http://twitter.com/typescriptlang)
 
 _If you have other helpful links to share, or find any of the links above no longer work, please [let us know](https://github.com/tastejs/todomvc/issues)._
@@ -40,10 +40,15 @@ It's attractive to people with a background in strongly typed languages, who are
 
 
 ### Editors
-A great editor for TypeScript is Visual Studio 2012 with [TypeScript](http://go.microsoft.com/fwlink/?LinkID=266563) and  [Web Essentials 2012](http://visualstudiogallery.msdn.microsoft.com/07d54d12-7133-4e15-becb-6f451ea3bea6) plugins.
+Several free and commercial editors work very well with TypeScript.
 
-Webstorm has [support for TypeScript](http://blog.jetbrains.com/webstorm/2013/11/enjoy-typescript-in-webstorm/) as well.
+* [Visual Studio Code](https://code.visualstudio.com/download) is a free, [open source](https://github.com/microsoft/vscode) editor from Microsoft that runs on Windows, Mac, and several Linux distros. It has native support for TypeScript.
+* [Visual Studio 2017](https://www.visualstudio.com/downloads/) is available in several editions, including the [Community Edition](https://www.visualstudio.com/vs/community/) that is free for students, open-source, and individual developers, as well as commercial editions for professional developers. All editions except Visual Studio for Mac have native support for TypeScript.
+* [WebStorm](https://www.jetbrains.com/webstorm/) from JetBrains s.r.o. is a commercial editor for JavaScript projects, with native support for TypeScript.
+* The [Sublime text editor](http://www.sublimetext.com/) can support TypeScript with an [open source plug-in](https://github.com/Microsoft/TypeScript-Sublime-Plugin) created by Microsoft.
+* Several other editors are supported, as found [on the GitHub wiki for the TypeScript project](https://github.com/Microsoft/TypeScript/wiki/TypeScript-Editor-Support).
 
+Many extensions for Visual Studio and Visual Studio Code are available to enhance your productivity with TypeScript.
 
 ### Ambient declarations
 
@@ -75,11 +80,11 @@ It's definitely possible to convert the vanillajs todo app into TypeScript, but 
 
 A standalone TypeScript compiler is available on NPM.
 
-	npm install -g typescript
+	npm install
 
 To compile the TypeScript in this project:
 
-	# from labs/architecture-examples/typescript-angular
-	tsc --sourcemap --out js/Application.js js/_all.ts
+	# from examples/typescript-angular
+	$ npm run compile
 
 Or use Visual Studio with the TypeScript plugin.

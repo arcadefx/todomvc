@@ -2,18 +2,18 @@
 
 > HTML is great for declaring static documents, but it falters when we try to use it for declaring dynamic views in web-applications. AngularJS lets you extend HTML vocabulary for your application. The resulting environment is extraordinarily expressive, readable, and quick to develop.
 
-> _[AngularJS - angularjs.com](http://angularjs.com)_
+> _[AngularJS - angularjs.org](http://angularjs.org)_
 
 
 ## Learning AngularJS
-The [AngularJS website](http://angularjs.com) is a great resource for getting started.
+The [AngularJS website](http://angularjs.org) is a great resource for getting started.
 
 Here are some links you may find helpful:
 
 * [Tutorial](http://docs.angularjs.org/tutorial)
 * [API Reference](http://docs.angularjs.org/api)
 * [Developer Guide](http://docs.angularjs.org/guide)
-* [Applications built with AngularJS](http://builtwith.angularjs.org)
+* [Applications built with AngularJS](https://www.madewithangular.com/)
 * [Blog](http://blog.angularjs.org)
 * [FAQ](http://docs.angularjs.org/misc/faq)
 * [AngularJS Meetups](http://www.youtube.com/angularjs)
@@ -34,3 +34,10 @@ Get help from other AngularJS users:
 * [AngularjS on Google +](https://plus.google.com/+AngularJS/posts)
 
 _If you have other helpful links to share, or find any of the links above no longer work, please [let us know](https://github.com/tastejs/todomvc/issues)._
+
+## Unit Tests
+
+To run the test suite, run these commands:
+
+    npm install
+    npm test

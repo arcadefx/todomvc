@@ -1,4 +1,4 @@
-﻿/*jshint strict:false */
+/*jshint strict:false */
 /*global enyo:false, $:false */
 /*exported ENTER_KEY, ESC_KEY */
 // This is based on Enyo 2.1.1.  The next version (2.3) of Enyo will more tightly integrate MVC and should require less custom code.
@@ -139,7 +139,7 @@ enyo.kind({
 		// if we have created the todo-list in the enyo hierarchy
 		if (enyo.$['todo-list']) {
 			todoList = enyo.$['todo-list'];
-			$('#filters a').removeClass('selected');
+			$('.filters a').removeClass('selected');
 			// reset the collection being used by the controller
 			this.releaseCollection();
 			this.load();
@@ -153,13 +153,13 @@ enyo.kind({
 			});
 			// set the appropriate filter link css, then update the collection to the correct models array
 			if (this.route === '/completed') {
-				$('#tagComplete').addClass('selected');
+				$('.tagComplete').addClass('selected');
 				this.update(completedTasks);
 			} else if (this.route === '/active') {
-				$('#tagActive').addClass('selected');
+				$('.tagActive').addClass('selected');
 				this.update(falseTasks);
 			} else {
-				$('#tagAll').addClass('selected');
+				$('.tagAll').addClass('selected');
 			}
 			// hide or show based on number of total tasks
 			if (length === 0) {
@@ -170,9 +170,9 @@ enyo.kind({
 				enyo.$.footer.show();
 				// toggle the all button
 				if (falseTasks.length === 0) {
-					$('#toggle-all').attr('checked', true);
+					$('.toggle-all').attr('checked', true);
 				} else {
-					$('#toggle-all').removeAttr('checked');
+					$('.toggle-all').removeAttr('checked');
 				}
 				// update the task counter
 				enyo.$['count-number'].setContent(falseTasks.length);
@@ -184,10 +184,8 @@ enyo.kind({
 				// update the clear completed button
 				if (completedTasks.length === 0) {
 					enyo.$['clear-completed'].hide();
-					enyo.$['clear-completed'].setContent('');
 				} else {
 					enyo.$['clear-completed'].show();
-					enyo.$['clear-completed'].setContent('Clear completed (' + completedTasks.length + ')');
 				}
 			}
 			// set the correct ui representation for each task.  Use the top level todo-list object to navigate down the rows

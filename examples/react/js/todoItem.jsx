@@ -23,15 +23,7 @@ var app = app || {};
 		},
 
 		handleEdit: function () {
-			// react optimizes renders by batching them. This means you can't call
-			// parent's `onEdit` (which in this case triggeres a re-render), and
-			// immediately manipulate the DOM as if the rendering's over. Put it as a
-			// callback. Refer to app.jsx' `edit` method
-			this.props.onEdit(function () {
-				var node = this.refs.editField.getDOMNode();
-				node.focus();
-				node.setSelectionRange(node.value.length, node.value.length);
-			}.bind(this));
+			this.props.onEdit();
 			this.setState({editText: this.props.todo.title});
 		},
 
@@ -45,7 +37,9 @@ var app = app || {};
 		},
 
 		handleChange: function (event) {
-			this.setState({editText: event.target.value});
+			if (this.props.editing) {
+				this.setState({editText: event.target.value});
+			}
 		},
 
 		getInitialState: function () {
@@ -67,9 +61,23 @@ var app = app || {};
 			);
 		},
 
+		/**
+		 * Safely manipulate the DOM after updating the state when invoking
+		 * `this.props.onEdit()` in the `handleEdit` method above.
+		 * For more info refer to notes at https://facebook.github.io/react/docs/component-api.html#setstate
+		 * and https://facebook.github.io/react/docs/component-specs.html#updating-componentdidupdate
+		 */
+		componentDidUpdate: function (prevProps) {
+			if (!prevProps.editing && this.props.editing) {
+				var node = React.findDOMNode(this.refs.editField);
+				node.focus();
+				node.setSelectionRange(node.value.length, node.value.length);
+			}
+		},
+
 		render: function () {
 			return (
-				<li className={React.addons.classSet({
+				<li className={classNames({
 					completed: this.props.todo.completed,
 					editing: this.props.editing
 				})}>

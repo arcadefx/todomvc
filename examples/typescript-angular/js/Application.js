@@ -44,9 +44,8 @@ var todos;
     function todoBlur() {
         return {
             link: function ($scope, element, attributes) {
-                element.bind('blur', function () {
-                    $scope.$apply(attributes.todoBlur);
-                });
+                element.bind('blur', function () { $scope.$apply(attributes.todoBlur); });
+                $scope.$on('$destroy', function () { element.unbind('blur'); });
             }
         };
     }
@@ -54,7 +53,29 @@ var todos;
 })(todos || (todos = {}));
 /// <reference path='../_all.ts' />
 var todos;
-(function (_todos) {
+(function (todos) {
+    'use strict';
+    var ESCAPE_KEY = 27;
+    /**
+     * Directive that cancels editing a todo if the user presses the Esc key.
+     */
+    function todoEscape() {
+        return {
+            link: function ($scope, element, attributes) {
+                element.bind('keydown', function (event) {
+                    if (event.keyCode === ESCAPE_KEY) {
+                        $scope.$apply(attributes.todoEscape);
+                    }
+                });
+                $scope.$on('$destroy', function () { element.unbind('keydown'); });
+            }
+        };
+    }
+    todos.todoEscape = todoEscape;
+})(todos || (todos = {}));
+/// <reference path='../_all.ts' />
+var todos;
+(function (todos_1) {
     'use strict';
     /**
      * Services that persists and retrieves TODOs from localStorage.
@@ -71,7 +92,7 @@ var todos;
         };
         return TodoStorage;
     })();
-    _todos.TodoStorage = TodoStorage;
+    todos_1.TodoStorage = TodoStorage;
 })(todos || (todos = {}));
 /// <reference path='../_all.ts' />
 var todos;
@@ -106,7 +127,9 @@ var todos;
             $scope.location = $location;
         }
         TodoCtrl.prototype.onPath = function (path) {
-            this.$scope.statusFilter = (path === '/active') ? { completed: false } : (path === '/completed') ? { completed: true } : null;
+            this.$scope.statusFilter = (path === '/active') ?
+                { completed: false } : (path === '/completed') ?
+                { completed: true } : {};
         };
         TodoCtrl.prototype.onTodos = function () {
             this.$scope.remainingCount = this.filterFilter(this.todos, { completed: false }).length;
@@ -124,9 +147,21 @@ var todos;
         };
         TodoCtrl.prototype.editTodo = function (todoItem) {
             this.$scope.editedTodo = todoItem;
+            // Clone the original todo in case editing is cancelled.
+            this.$scope.originalTodo = angular.extend({}, todoItem);
+        };
+        TodoCtrl.prototype.revertEdits = function (todoItem) {
+            this.todos[this.todos.indexOf(todoItem)] = this.$scope.originalTodo;
+            this.$scope.reverted = true;
         };
         TodoCtrl.prototype.doneEditing = function (todoItem) {
             this.$scope.editedTodo = null;
+            this.$scope.originalTodo = null;
+            if (this.$scope.reverted) {
+                // Todo edits were reverted, don't save.
+                this.$scope.reverted = null;
+                return;
+            }
             todoItem.title = todoItem.title.trim();
             if (!todoItem.title) {
                 this.removeTodo(todoItem);
@@ -139,9 +174,7 @@ var todos;
             this.$scope.todos = this.todos = this.todos.filter(function (todoItem) { return !todoItem.completed; });
         };
         TodoCtrl.prototype.markAll = function (completed) {
-            this.todos.forEach(function (todoItem) {
-                todoItem.completed = completed;
-            });
+            this.todos.forEach(function (todoItem) { todoItem.completed = completed; });
         };
         // $inject annotation.
         // It provides $injector with information about dependencies to be injected into constructor
@@ -166,6 +199,22 @@ var todos;
 var todos;
 (function (todos) {
     'use strict';
-    var todomvc = angular.module('todomvc', []).controller('todoCtrl', todos.TodoCtrl).directive('todoBlur', todos.todoBlur).directive('todoFocus', todos.todoFocus).service('todoStorage', todos.TodoStorage);
+    var todomvc = angular.module('todomvc', [])
+        .controller('todoCtrl', todos.TodoCtrl)
+        .directive('todoBlur', todos.todoBlur)
+        .directive('todoFocus', todos.todoFocus)
+        .directive('todoEscape', todos.todoEscape)
+        .service('todoStorage', todos.TodoStorage);
 })(todos || (todos = {}));
+/// <reference path='libs/jquery/jquery.d.ts' />
+/// <reference path='libs/angular/angular.d.ts' />
+/// <reference path='models/TodoItem.ts' />
+/// <reference path='interfaces/ITodoScope.ts' />
+/// <reference path='interfaces/ITodoStorage.ts' />
+/// <reference path='directives/TodoFocus.ts' />
+/// <reference path='directives/TodoBlur.ts' />
+/// <reference path='directives/TodoEscape.ts' />
+/// <reference path='services/TodoStorage.ts' />
+/// <reference path='controllers/TodoCtrl.ts' />
+/// <reference path='Application.ts' />
 //# sourceMappingURL=Application.js.map

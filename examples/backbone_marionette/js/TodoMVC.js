@@ -1,26 +1,22 @@
-/*global Backbone */
-'use strict';
+/*global Backbone, TodoMVC:true, $ */
 
-// TodoMVC is global for developing in the console
-// and functional testing.
-window.TodoMVC = new Backbone.Marionette.Application();
+var TodoMVC = TodoMVC || {};
 
-(function () {
-  var filterState = new Backbone.Model({
-    filter: 'all'
-  });
+$(function () {
+	'use strict';
 
-  TodoMVC.reqres.setHandler('filterState', function () {
-    return filterState;
-  });
-})();
+	// After we initialize the app, we want to kick off the router
+	// and controller, which will handle initializing our Views
+	TodoMVC.App.on('start', function () {
+		var controller = new TodoMVC.Controller();
+		controller.router = new TodoMVC.Router({
+			controller: controller
+		});
 
-TodoMVC.addRegions({
-	header: '#header',
-	main: '#main',
-	footer: '#footer'
-});
+		controller.start();
+		Backbone.history.start();
+	});
 
-TodoMVC.on('start', function () {
-	Backbone.history.start();
+	// start the TodoMVC app (defined in js/TodoMVC.js)
+	TodoMVC.App.start();
 });

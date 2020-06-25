@@ -5,21 +5,24 @@ var app = app || {};
 // View utility
 app.watchInput = function (onenter, onescape) {
 	return function (e) {
+		m.redraw.strategy('none');
 		if (e.keyCode === app.ENTER_KEY) {
 			onenter();
+			m.redraw.strategy('diff');
 		} else if (e.keyCode === app.ESC_KEY) {
 			onescape();
+			m.redraw.strategy('diff');
 		}
 	};
 };
 
-app.view = (function() {
+app.view = (function () {
 	var focused = false;
 
 	return function (ctrl) {
 		return [
-			m('header#header', [
-				m('h1', 'todos'), m('input#new-todo[placeholder="What needs to be done?"]', {
+			m('header.header', [
+				m('h1', 'todos'), m('input.new-todo[placeholder="What needs to be done?"]', {
 					onkeyup: app.watchInput(ctrl.add.bind(ctrl),
 						ctrl.clearTitle.bind(ctrl)),
 					value: ctrl.title(),
@@ -32,23 +35,27 @@ app.view = (function() {
 					}
 				})
 			]),
-			m('section#main', {
+			m('section.main', {
 				style: {
 					display: ctrl.list.length ? '' : 'none'
 				}
 			}, [
-				m('input#toggle-all[type=checkbox]', {
+				m('input#toggle-all.toggle-all[type=checkbox]', {
 					onclick: ctrl.completeAll.bind(ctrl),
 					checked: ctrl.allCompleted()
 				}),
-				m('ul#todo-list', [
+				m('label', {
+					for: 'toggle-all'
+				}),
+				m('ul.todo-list', [
 					ctrl.list.filter(ctrl.isVisible.bind(ctrl)).map(function (task, index) {
 						return m('li', { class: (function () {
 							var classes = '';
 							classes += task.completed() ? 'completed' : '';
 							classes += task.editing() ? ' editing' : '';
 							return classes;
-						})()
+						})(),
+						key: task.key
 						}, [
 							m('.view', [
 								m('input.toggle[type=checkbox]', {
@@ -63,13 +70,17 @@ app.view = (function() {
 								})
 							]), m('input.edit', {
 								value: task.title(),
-								onkeyup: app.watchInput(ctrl.doneEditing.bind(ctrl, task, index),
-									ctrl.cancelEditing.bind(ctrl, task)),
-								oninput: m.withAttr('value', task.title),
+								onkeyup: app.watchInput(
+									ctrl.doneEditing.bind(ctrl, task, index),
+									ctrl.cancelEditing.bind(ctrl, task)
+								),
+								oninput: m.withAttr('value', function (value) {
+									m.redraw.strategy('none');
+									task.title(value);
+								}),
 								config: function (element) {
 									if (task.editing()) {
 										element.focus();
-										element.selectionStart = element.value.length;
 									}
 								},
 								onblur: ctrl.doneEditing.bind(ctrl, task, index)
